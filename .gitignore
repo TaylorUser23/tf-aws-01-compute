@@ -1,0 +1,32 @@
+# Terraform working directories and state — state can contain secrets
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+*.tfplan
+tfplan
+
+# Real variable values stay local; commit *.tfvars.example instead
+*.tfvars
+*.tfvars.json
+!*.tfvars.example
+
+# Local overrides
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# CLI config
+.terraformrc
+terraform.rc
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# NOTE: .terraform.lock.hcl is intentionally NOT ignored — commit it so
+# everyone (and CI) uses the exact same provider versions.

@@ -1,0 +1,13 @@
+# Copy to terraform.tfvars (gitignored) and fill in:
+#   cp terraform.tfvars.example terraform.tfvars
+
+aws_region  = "us-east-1"
+aws_profile = "tf-lab" # profile name you chose during `aws configure sso`
+environment = "dev"
+
+# Your public IP: curl -s https://checkip.amazonaws.com
+my_ip_cidr = "203.0.113.10/32"
+
+instance_count = 1
+instance_type  = "t3.micro"
+page_message   = "Hello from Project 01 — provisioned and configured by Terraform"

@@ -1,0 +1,33 @@
+#!/bin/bash
+# Rendered by Terraform templatefile().
+#   Dollar-brace with ONE dollar sign  -> filled in by Terraform (instance_name, page_message)
+#   Dollar-brace with TWO dollar signs -> escaped, so bash sees a normal shell variable
+set -euxo pipefail
+
+dnf -y update
+dnf -y install nginx
+
+# IMDSv2: get a session token first, then read metadata with it
+TOKEN=$(curl -sX PUT "http://169.254.169.254/latest/api/token" \
+  -H "X-aws-ec2-metadata-token-ttl-seconds: 300")
+INSTANCE_ID=$(curl -s -H "X-aws-ec2-metadata-token: $${TOKEN}" \
+  http://169.254.169.254/latest/meta-data/instance-id)
+AZ=$(curl -s -H "X-aws-ec2-metadata-token: $${TOKEN}" \
+  http://169.254.169.254/latest/meta-data/placement/availability-zone)
+
+cat > /usr/share/nginx/html/index.html <<EOF
+<!doctype html>
+<html>
+  <head><meta charset="utf-8"><title>${instance_name}</title></head>
+  <body style="font-family: system-ui, sans-serif; margin: 3rem;">
+    <h1>${instance_name}</h1>
+    <p>${page_message}</p>
+    <ul>
+      <li>Instance ID: $${INSTANCE_ID}</li>
+      <li>Availability Zone: $${AZ}</li>
+    </ul>
+  </body>
+</html>
+EOF
+
+systemctl enable --now nginx
